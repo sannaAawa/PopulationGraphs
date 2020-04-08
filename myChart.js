@@ -1,20 +1,6 @@
-// Define a function called logCountryCode. This function takes no arguments
-// (the brackets after the function name are empty). When the function is called,
-// the two indented lines of code are executed.
-function logCountryCode() {
-    // Define a variable called countryCode. Put into it the value that is in the
-    //HTML element with id 'country'.
-    var countryCode = document.getElementById("country").value;
-    // Print the value of the variable countryCode into the console.
-    console.log(countryCode);
-}
+var currentChart;
 
-// Add an event listener to the HTML element with the id 'renderBtn'. That's our
-// button. When the event 'click' happens (when the button is clicked), run the
-// function 'logCountryCode'.
-document
-    .getElementById("renderBtn")
-    .addEventListener("click", fetchData);
+document.getElementById("renderBtn").addEventListener("click", fetchData);
 
 async function fetchData() {
     var countryCode = document.getElementById('country').value;
@@ -54,8 +40,12 @@ function getCountryName(data) {
 function renderChart(data, labels, countryName) {
     var ctx = document.getElementById('myChart').getContext('2d');
     
+    if (currentChart) {
+        // Clear the previous chart if it exists
+        currentChart.destroy();
+    }
     // Draw new chart
-    new Chart(ctx, {
+    currentChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
@@ -65,6 +55,15 @@ function renderChart(data, labels, countryName) {
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
             }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
         }
     });
 }
